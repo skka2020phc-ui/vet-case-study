@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Veterinary Case Study Form</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f0f4f8;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px;
+  }
+
+  .page-header {
+    width: 100%;
+    max-width: 960px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .page-header h1 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1e3a5f;
+    letter-spacing: 0.5px;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  .btn {
+    padding: 8px 18px;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-primary {
+    background: #1e3a5f;
+    color: white;
+  }
+  .btn-primary:hover { background: #16304f; }
+
+  .btn-secondary {
+    background: #e8edf2;
+    color: #1e3a5f;
+  }
+  .btn-secondary:hover { background: #d8e2ec; }
+
+  .btn-google {
+    background: #4285F4;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn-google:hover { background: #3367d6; }
+
+  /* FORM CARD */
+  .form-card {
+    width: 100%;
+    max-width: 960px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+    overflow: hidden;
+  }
+
+  /* SECTION HEADERS */
+  .section-header {
+    background: #1e3a5f;
+    color: white;
+    font-size: 11.5px;
+    font-weight: 700;
+    padding: 5px 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* GRID ROWS */
+  .grid-row {
+    display: grid;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .grid-row:last-child { border-bottom: none; }
+
+  /* FIELD */
+  .field {
+    display: flex;
+    align-items: center;
+    border-right: 1px solid #e2e8f0;
+    padding: 0;
+    min-height: 34px;
+  }
+
+  .field:last-child { border-right: none; }
+
+  .field label {
+    font-size: 10.5px;
+    font-weight: 700;
+    color: #1e3a5f;
+    white-space: nowrap;
+    padding: 4px 8px;
+    min-width: fit-content;
+    background: #f7f9fc;
+    border-right: 1px solid #e2e8f0;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+  }
+
+  .field input,
+  .field select,
+  .field textarea {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 11px;
+    color: #2d3748;
+    padding: 4px 8px;
+    background: transparent;
+    width: 100%;
+  }
+
+  .field textarea {
+    resize: none;
+    min-height: 44px;
+    line-height: 1.4;
+  }
+
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    background: #eff6ff;
+  }
+
+  /* COLSPAN fields */
+  .field.wide {
+    grid-column: span 2;
+  }
+  .field.full {
+    grid-column: 1 / -1;
+  }
+
+  /* SPECIFIC GRIDS */
+  .grid-6 { grid-template-columns: repeat(6, 1fr); }
+  .grid-5 { grid-template-columns: repeat(5, 1fr); }
+  .grid-4 { grid-template-columns: repeat(4, 1fr); }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-2 { grid-template-columns: repeat(2, 1fr); }
+
+  /* STATUS BAR */
+  .status-bar {
+    width: 100%;
+    max-width: 960px;
+    margin-top: 10px;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    display: none;
+  }
+
+  .status-bar.success {
+    background: #d1fae5;
+    color: #065f46;
+    display: block;
+  }
+
+  .status-bar.error {
+    background: #fee2e2;
+    color: #991b1b;
+    display: block;
+  }
+
+  .status-bar.info {
+    background: #dbeafe;
+    color: #1e40af;
+    display: block;
+  }
+
+  /* AUTH PANEL */
+  .auth-panel {
+    width: 100%;
+    max-width: 960px;
+    background: #fffbeb;
+    border: 1px solid #fcd34d;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+    color: #78350f;
+  }
+
+  .auth-panel.hidden { display: none; }
+
+  .google-icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* PRINT STYLES */
+  @media print {
+    body { background: white; padding: 0; }
+    .page-header, .auth-panel, .status-bar, .header-actions { display: none !important; }
+    .form-card { box-shadow: none; border: 1px solid #ccc; }
+  }
+
+  @media (max-width: 700px) {
+    .grid-6, .grid-5, .grid-4 { grid-template-columns: 1fr 1fr; }
+    .grid-3 { grid-template-columns: 1fr; }
+    .field { min-height: 36px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- AUTH PANEL -->
+<div class="auth-panel" id="authPanel">
+  ⚠️ Google Docs မှာ save လုပ်ဖို့ Google account နဲ့ sign in လိုပါတယ်။
+  <button class="btn btn-google" onclick="signInGoogle()">
+    <svg class="google-icon" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4C12.955 4 4 12.955 4 24s8.955 20 20 20s20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#FF3D00" d="m6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4C16.318 4 9.656 8.337 6.306 14.691z"/><path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002l6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/></svg>
+    Sign in with Google
+  </button>
+</div>
+
+<!-- HEADER -->
+<div class="page-header">
+  <h1>🐾 Veterinary Case Study</h1>
+  <div class="header-actions">
+    <button class="btn btn-secondary" onclick="clearForm()">Clear</button>
+    <button class="btn btn-secondary" onclick="window.print()">Print</button>
+    <button class="btn btn-google" onclick="saveToGoogleDocs()" id="saveBtn">
+      <svg class="google-icon" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4C12.955 4 4 12.955 4 24s8.955 20 20 20s20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#FF3D00" d="m6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4C16.318 4 9.656 8.337 6.306 14.691z"/><path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002l6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/></svg>
+      Save to Google Docs
+    </button>
+  </div>
+</div>
+
+<!-- FORM -->
+<div class="form-card" id="caseForm">
+
+  <!-- GENERAL INFORMATION -->
+  <div class="section-header">General Information</div>
+
+  <div class="grid-row grid-6">
+    <div class="field wide">
+      <label>Pet Name</label>
+      <input type="text" id="petName" placeholder="Enter name">
+    </div>
+    <div class="field">
+      <label>Sex</label>
+      <select id="sex">
+        <option value="">-</option>
+        <option value="Male" selected>Male</option>
+        <option value="Female">Female</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Color</label>
+      <input type="text" id="color" value="Yellow">
+    </div>
+    <div class="field">
+      <label>Visit Date</label>
+      <input type="date" id="visitDate" value="2026-06-14">
+    </div>
+  </div>
+
+  <div class="grid-row grid-6">
+    <div class="field wide">
+      <label>Species</label>
+      <select id="species">
+        <option value="Dog" selected>Dog</option>
+        <option value="Cat">Cat</option>
+        <option value="Bird">Bird</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Weight (kg)</label>
+      <input type="number" id="weight" step="0.1" placeholder="0.0">
+    </div>
+    <div class="field">
+      <label>Repro Status</label>
+      <select id="reproStatus">
+        <option value="Intact" selected>Intact</option>
+        <option value="Neutered">Neutered</option>
+        <option value="Spayed">Spayed</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Breed</label>
+      <input type="text" id="breed" placeholder="Breed">
+    </div>
+  </div>
+
+  <div class="grid-row grid-6">
+    <div class="field wide">
+      <label>DOB</label>
+      <input type="date" id="dob" value="2026-06-14">
+    </div>
+    <div class="field">
+      <label>Age</label>
+      <input type="text" id="age" placeholder="e.g. 2y 3m">
+    </div>
+    <div class="field">
+      <label>BCS</label>
+      <select id="bcs">
+        <option value="">-</option>
+        <option value="1">1</option>
+        <option value="2" selected>2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Owner</label>
+      <input type="text" id="owner" placeholder="Owner name">
+    </div>
+  </div>
+
+  <!-- SYSTEMIC REVIEW -->
+  <div class="section-header">Systemic Review</div>
+
+  <div class="grid-row grid-3">
+    <div class="field">
+      <label>Appetite</label>
+      <input type="text" id="appetite" placeholder="-">
+    </div>
+    <div class="field">
+      <label>Vomit</label>
+      <input type="text" id="vomit" placeholder="-">
+    </div>
+    <div class="field">
+      <label>Resp. Signs</label>
+      <input type="text" id="respSigns" value="Sneezing 7 days">
+    </div>
+  </div>
+
+  <div class="grid-row grid-3">
+    <div class="field">
+      <label>Water Intake</label>
+      <input type="text" id="waterIntake" placeholder="-">
+    </div>
+    <div class="field">
+      <label>Stool</label>
+      <input type="text" id="stool" value="Diarrhea 2 days Blood 4 times">
+    </div>
+    <div class="field">
+      <label>Skin</label>
+      <input type="text" id="skin" value="Normal">
+    </div>
+  </div>
+
+  <div class="grid-row grid-3">
+    <div class="field">
+      <label>Energy</label>
+      <input type="text" id="energy" placeholder="-">
+    </div>
+    <div class="field">
+      <label>Urination</label>
+      <input type="text" id="urination" value="Polyuria 3 days 2 times">
+    </div>
+    <div class="field">
+      <label>Pain Score</label>
+      <select id="painScore">
+        <option value="-" selected>-</option>
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- LIFESTYLE & PREVENTATIVE -->
+  <div class="section-header">Lifestyle &amp; Preventative</div>
+
+  <div class="grid-row grid-4">
+    <div class="field wide">
+      <label>Diet</label>
+      <input type="text" id="diet" placeholder="-">
+    </div>
+    <div class="field wide">
+      <label>Vaccination</label>
+      <input type="text" id="vaccination" placeholder="-">
+    </div>
+  </div>
+
+  <div class="grid-row grid-4">
+    <div class="field wide">
+      <label>Environment</label>
+      <input type="text" id="environment" placeholder="-">
+    </div>
+    <div class="field wide">
+      <label>Deworming</label>
+      <input type="text" id="deworming" placeholder="-">
+    </div>
+  </div>
+
+  <!-- CHIEF COMPLAINT & HISTORY -->
+  <div class="section-header">Chief Complaint &amp; History</div>
+
+  <div class="grid-row">
+    <div class="field full">
+      <label>C. Complaint</label>
+      <textarea id="chiefComplaint" placeholder="Enter chief complaint..."></textarea>
+    </div>
+  </div>
+
+  <div class="grid-row grid-2">
+    <div class="field">
+      <label>Onset &amp; Duration</label>
+      <input type="text" id="onsetDuration" placeholder="">
+    </div>
+    <div class="field">
+      <label>Allergy Hx</label>
+      <input type="text" id="allergyHx" placeholder="">
+    </div>
+  </div>
+
+  <div class="grid-row grid-2">
+    <div class="field">
+      <label>Past Medical Hx</label>
+      <input type="text" id="pastMedicalHx" placeholder="">
+    </div>
+    <div class="field">
+      <label>Prev. Treatment</label>
+      <input type="text" id="prevTreatment" placeholder="">
+    </div>
+  </div>
+
+  <!-- PHYSICAL EXAMINATIONS -->
+  <div class="section-header">Physical Examinations</div>
+
+  <div class="grid-row grid-3">
+    <div class="field">
+      <label>Temp (°F)</label>
+      <input type="text" id="temp" placeholder="-">
+    </div>
+    <div class="field">
+      <label>Pulse Quality</label>
+      <input type="text" id="pulseQuality" placeholder="-">
+    </div>
+    <div class="field">
+      <label>Hydration</label>
+      <input type="text" id="hydration" placeholder="-">
+    </div>
+  </div>
+
+  <div class="grid-row grid-3">
+    <div class="field">
+      <label>Heart Rate</label>
+      <input type="text" id="heartRate" placeholder="">
+    </div>
+    <div class="field">
+      <label>Mucous Membrane</label>
+      <input type="text" id="mucousMembrane" placeholder="-">
+    </div>
+    <div class="field">
+      <label>Lymph Nodes</label>
+      <input type="text" id="lymphNodes" placeholder="-">
+    </div>
+  </div>
+
+  <div class="grid-row grid-3">
+    <div class="field">
+      <label>Resp. Rate</label>
+      <input type="text" id="respRate" placeholder="">
+    </div>
+    <div class="field">
+      <label>CRT</label>
+      <input type="text" id="crt" placeholder="-">
+    </div>
+    <div class="field">
+      <label>Abnormal Findings</label>
+      <input type="text" id="abnormalFindings" placeholder="">
+    </div>
+  </div>
+
+  <!-- CASE ANALYSIS -->
+  <div class="section-header">Case Analysis</div>
+
+  <div class="grid-row grid-3">
+    <div class="field">
+      <label>Problem List</label>
+      <textarea id="problemList" placeholder=""></textarea>
+    </div>
+    <div class="field">
+      <label>Differential Dx</label>
+      <textarea id="differentialDx" placeholder=""></textarea>
+    </div>
+    <div class="field">
+      <label>Dx Results</label>
+      <textarea id="dxResults" placeholder=""></textarea>
+    </div>
+  </div>
+
+  <div class="grid-row grid-3">
+    <div class="field">
+      <label>Dx Plan</label>
+      <input type="text" id="dxPlan" placeholder="-">
+    </div>
+    <div class="field">
+      <label>Final Diagnosis</label>
+      <input type="text" id="finalDiagnosis" placeholder="">
+    </div>
+    <div class="field">
+      <label>Clinician</label>
+      <input type="text" id="clinician" placeholder="">
+    </div>
+  </div>
+
+</div><!-- end form-card -->
+
+<div class="status-bar" id="statusBar"></div>
+
+<!-- Google API Scripts -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://apis.google.com/js/api.js"></script>
+
+<script>
+// ===== CONFIG =====
+// ⚠️ GitHub Pages တင်ပြီးရင် Google Cloud Console မှာ Client ID ယူပြီး ဒီနေရာမှာ ထည့်ပါ
+const CLIENT_ID = '325457195617-m9b5d3q0j22oo0kk61ugd50epvi4sbjg.apps.googleusercontent.com';
+const SCOPES = 'https://www.googleapis.com/auth/documents https://www.googleapis.com/auth/drive.file';
+
+let tokenClient;
+let isSignedIn = false;
+
+// ===== GOOGLE AUTH =====
+window.onload = function () {
+  gapi.load('client', initGapiClient);
+};
+
+function initGapiClient() {
+  gapi.client.init({
+    discoveryDocs: [
+      'https://docs.googleapis.com/$discovery/rest?version=v1',
+      'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'
+    ],
+  }).then(() => {
+    tokenClient = google.accounts.oauth2.initTokenClient({
+      client_id: CLIENT_ID,
+      scope: SCOPES,
+      callback: (resp) => {
+        if (resp.error) { showStatus('Sign in failed: ' + resp.error, 'error'); return; }
+        isSignedIn = true;
+        document.getElementById('authPanel').classList.add('hidden');
+        showStatus('✅ Google account connected!', 'success');
+      },
+    });
+    // Check if already has token
+    if (gapi.client.getToken() !== null) {
+      isSignedIn = true;
+      document.getElementById('authPanel').classList.add('hidden');
+    }
+  });
+}
+
+function signInGoogle() {
+  tokenClient.requestAccessToken({ prompt: 'consent' });
+}
+
+// ===== COLLECT FORM DATA =====
+function getFormData() {
+  return {
+    petName: v('petName'), sex: v('sex'), color: v('color'), visitDate: v('visitDate'),
+    species: v('species'), weight: v('weight'), reproStatus: v('reproStatus'), breed: v('breed'),
+    dob: v('dob'), age: v('age'), bcs: v('bcs'), owner: v('owner'),
+    appetite: v('appetite'), vomit: v('vomit'), respSigns: v('respSigns'),
+    waterIntake: v('waterIntake'), stool: v('stool'), skin: v('skin'),
+    energy: v('energy'), urination: v('urination'), painScore: v('painScore'),
+    diet: v('diet'), vaccination: v('vaccination'),
+    environment: v('environment'), deworming: v('deworming'),
+    chiefComplaint: v('chiefComplaint'), onsetDuration: v('onsetDuration'),
+    allergyHx: v('allergyHx'), pastMedicalHx: v('pastMedicalHx'), prevTreatment: v('prevTreatment'),
+    temp: v('temp'), pulseQuality: v('pulseQuality'), hydration: v('hydration'),
+    heartRate: v('heartRate'), mucousMembrane: v('mucousMembrane'), lymphNodes: v('lymphNodes'),
+    respRate: v('respRate'), crt: v('crt'), abnormalFindings: v('abnormalFindings'),
+    problemList: v('problemList'), differentialDx: v('differentialDx'), dxResults: v('dxResults'),
+    dxPlan: v('dxPlan'), finalDiagnosis: v('finalDiagnosis'), clinician: v('clinician'),
+  };
+}
+
+function v(id) { return document.getElementById(id)?.value || '-'; }
+
+// ===== SAVE TO GOOGLE DOCS =====
+async function saveToGoogleDocs() {
+  if (!isSignedIn) {
+    showStatus('⚠️ Please sign in with Google first.', 'error');
+    signInGoogle();
+    return;
+  }
+
+  showStatus('⏳ Creating Google Doc...', 'info');
+
+  const d = getFormData();
+  const title = `VetCase_${d.petName !== '-' ? d.petName : 'Unknown'}_${d.visitDate}`;
+
+  try {
+    // Create new Google Doc
+    const docRes = await gapi.client.docs.documents.create({ title });
+    const docId = docRes.result.documentId;
+
+    // Build document content
+    const content = buildDocContent(d);
+
+    // Insert content into doc
+    await gapi.client.docs.documents.batchUpdate({
+      documentId: docId,
+      resource: { requests: content }
+    });
+
+    const docUrl = `https://docs.google.com/document/d/${docId}/edit`;
+    showStatus(`✅ Saved! <a href="${docUrl}" target="_blank" style="color:#065f46;font-weight:700;">Open Google Doc →</a>`, 'success');
+
+  } catch (err) {
+    console.error(err);
+    showStatus('❌ Error: ' + (err.result?.error?.message || err.message), 'error');
+  }
+}
+
+function buildDocContent(d) {
+  const rows = [
+    ['VETERINARY CASE STUDY', ''],
+    ['', ''],
+    ['GENERAL INFORMATION', ''],
+    ['Pet Name', d.petName], ['Sex', d.sex], ['Color', d.color], ['Visit Date', d.visitDate],
+    ['Species', d.species], ['Weight (kg)', d.weight], ['Repro Status', d.reproStatus], ['Breed', d.breed],
+    ['DOB', d.dob], ['Age', d.age], ['BCS', d.bcs], ['Owner', d.owner],
+    ['', ''],
+    ['SYSTEMIC REVIEW', ''],
+    ['Appetite', d.appetite], ['Vomit', d.vomit], ['Resp. Signs', d.respSigns],
+    ['Water Intake', d.waterIntake], ['Stool', d.stool], ['Skin', d.skin],
+    ['Energy', d.energy], ['Urination', d.urination], ['Pain Score', d.painScore],
+    ['', ''],
+    ['LIFESTYLE & PREVENTATIVE', ''],
+    ['Diet', d.diet], ['Vaccination', d.vaccination],
+    ['Environment', d.environment], ['Deworming', d.deworming],
+    ['', ''],
+    ['CHIEF COMPLAINT & HISTORY', ''],
+    ['Chief Complaint', d.chiefComplaint], ['Onset & Duration', d.onsetDuration],
+    ['Allergy Hx', d.allergyHx], ['Past Medical Hx', d.pastMedicalHx], ['Prev. Treatment', d.prevTreatment],
+    ['', ''],
+    ['PHYSICAL EXAMINATIONS', ''],
+    ['Temp (°F)', d.temp], ['Pulse Quality', d.pulseQuality], ['Hydration', d.hydration],
+    ['Heart Rate', d.heartRate], ['Mucous Membrane', d.mucousMembrane], ['Lymph Nodes', d.lymphNodes],
+    ['Resp. Rate', d.respRate], ['CRT', d.crt], ['Abnormal Findings', d.abnormalFindings],
+    ['', ''],
+    ['CASE ANALYSIS', ''],
+    ['Problem List', d.problemList], ['Differential Dx', d.differentialDx], ['Dx Results', d.dxResults],
+    ['Dx Plan', d.dxPlan], ['Final Diagnosis', d.finalDiagnosis], ['Clinician', d.clinician],
+  ];
+
+  let text = '';
+  rows.forEach(([label, value]) => {
+    if (!label && !value) { text += '\n'; return; }
+    if (!value) { text += label + '\n'; return; }
+    text += `${label}: ${value}\n`;
+  });
+
+  return [{
+    insertText: {
+      location: { index: 1 },
+      text: text
+    }
+  }];
+}
+
+// ===== CLEAR FORM =====
+function clearForm() {
+  if (!confirm('Clear all fields?')) return;
+  document.querySelectorAll('input, textarea, select').forEach(el => {
+    el.value = '';
+  });
+  showStatus('Form cleared.', 'info');
+}
+
+// ===== STATUS =====
+function showStatus(msg, type) {
+  const bar = document.getElementById('statusBar');
+  bar.innerHTML = msg;
+  bar.className = 'status-bar ' + type;
+  if (type !== 'info') {
+    setTimeout(() => { bar.className = 'status-bar'; }, 6000);
+  }
+}
+</script>
+
+</body>
+</html>
