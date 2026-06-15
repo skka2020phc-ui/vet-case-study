@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Veterinary Case Study Form</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f0f4f8;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px;
+  }
+  .page-header {
+    width: 100%; max-width: 980px;
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 12px;
+  }
+  .page-header h1 { font-size: 20px; font-weight: 700; color: #1e3a5f; }
+  .header-actions { display: flex; gap: 8px; }
+  .btn {
+    padding: 8px 16px; border: none; border-radius: 6px;
+    font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+  }
+  .btn-secondary { background: #e8edf2; color: #1e3a5f; }
+  .btn-secondary:hover { background: #d8e2ec; }
+  .btn-google { background: #4285F4; color: white; display: flex; align-items: center; gap: 6px; }
+  .btn-google:hover { background: #3367d6; }
+
+  .form-card {
+    width: 100%; max-width: 980px;
+    background: white; border-radius: 10px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.10); overflow: hidden;
+  }
+  .section-header {
+    background: #1e3a5f; color: white;
+    font-size: 11px; font-weight: 700;
+    padding: 5px 12px; letter-spacing: 1px; text-transform: uppercase;
+  }
+  .grid-row { display: grid; border-bottom: 1px solid #e2e8f0; }
+  .grid-row:last-child { border-bottom: none; }
+  .field {
+    display: flex; align-items: stretch;
+    border-right: 1px solid #e2e8f0; min-height: 32px;
+  }
+  .field:last-child { border-right: none; }
+  .field label {
+    font-size: 10px; font-weight: 700; color: #1e3a5f;
+    white-space: nowrap; padding: 4px 7px;
+    background: #f7f9fc; border-right: 1px solid #e2e8f0;
+    display: flex; align-items: center; min-width: fit-content;
+  }
+  .field input, .field select, .field textarea {
+    flex: 1; border: none; outline: none;
+    font-size: 11px; color: #2d3748; padding: 4px 7px;
+    background: transparent; width: 100%; font-family: inherit;
+  }
+  .field textarea { resize: none; min-height: 42px; line-height: 1.4; }
+  .field input:focus, .field select:focus, .field textarea:focus { background: #eff6ff; }
+  .field.full { grid-column: 1 / -1; }
+  .field.span2 { grid-column: span 2; }
+
+  .g6 { grid-template-columns: repeat(6, 1fr); }
+  .g4 { grid-template-columns: repeat(4, 1fr); }
+  .g3 { grid-template-columns: repeat(3, 1fr); }
+  .g2 { grid-template-columns: repeat(2, 1fr); }
+
+  .status-bar {
+    width: 100%; max-width: 980px; margin-top: 10px;
+    padding: 8px 14px; border-radius: 6px;
+    font-size: 12px; font-weight: 600; display: none;
+  }
+  .status-bar.success { background: #d1fae5; color: #065f46; display: block; }
+  .status-bar.error { background: #fee2e2; color: #991b1b; display: block; }
+  .status-bar.info { background: #dbeafe; color: #1e40af; display: block; }
+
+  .gicon { width: 16px; height: 16px; }
+
+  @media print {
+    body { background: white; padding: 0; }
+    .page-header, .status-bar { display: none !important; }
+    .form-card { box-shadow: none; }
+  }
+  @media (max-width: 700px) {
+    .g6, .g4 { grid-template-columns: 1fr 1fr; }
+    .g3 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>🐾 Veterinary Case Study</h1>
+  <div class="header-actions">
+    <button class="btn btn-secondary" onclick="window.print()">Print</button>
+    <button class="btn btn-google" onclick="saveToGoogleDocs()">
+      <svg class="gicon" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4C12.955 4 4 12.955 4 24s8.955 20 20 20s20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#FF3D00" d="m6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4C16.318 4 9.656 8.337 6.306 14.691z"/><path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002l6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/></svg>
+      Save to Google Docs
+    </button>
+  </div>
+</div>
+
+<div class="form-card" id="caseForm">
+
+  <!-- GENERAL INFORMATION -->
+  <div class="section-header">General Information</div>
+  <div class="grid-row g6">
+    <div class="field span2"><label>Pet Name</label><input type="text" id="petName" placeholder="Enter name"></div>
+    <div class="field"><label>Sex</label>
+      <select id="sex">
+        <option value="-">-</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+      </select>
+    </div>
+    <div class="field"><label>Color</label><input type="text" id="color" placeholder="-"></div>
+    <div class="field span2"><label>Visit Date</label><input type="date" id="visitDate"></div>
+  </div>
+  <div class="grid-row g6">
+    <div class="field span2"><label>Species</label>
+      <select id="species">
+        <option value="-">-</option>
+        <option value="Dog">Dog</option>
+        <option value="Cat">Cat</option>
+        <option value="Bird">Bird</option>
+        <option value="Rabbit">Rabbit</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+    <div class="field"><label>Weight (kg)</label><input type="number" id="weight" step="0.1" placeholder="-"></div>
+    <div class="field"><label>Repro Status</label>
+      <select id="reproStatus">
+        <option value="-">-</option>
+        <option value="Intact">Intact</option>
+        <option value="Neutered">Neutered</option>
+        <option value="Spayed">Spayed</option>
+      </select>
+    </div>
+    <div class="field span2"><label>Breed</label><input type="text" id="breed" placeholder="-"></div>
+  </div>
+  <div class="grid-row g6">
+    <div class="field span2"><label>DOB</label><input type="date" id="dob"></div>
+    <div class="field"><label>Age</label><input type="text" id="age" placeholder="-"></div>
+    <div class="field"><label>BCS</label>
+      <select id="bcs">
+        <option value="-">-</option>
+        <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+        <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+        <option value="7">7</option><option value="8">8</option><option value="9">9</option>
+      </select>
+    </div>
+    <div class="field span2"><label>Owner</label><input type="text" id="owner" placeholder="-"></div>
+  </div>
+
+  <!-- SYSTEMIC REVIEW -->
+  <div class="section-header">Systemic Review</div>
+  <div class="grid-row g3">
+    <div class="field"><label>Appetite</label>
+      <select id="appetite">
+        <option value="-">-</option>
+        <option value="Normal">Normal</option>
+        <option value="Increased">Increased</option>
+        <option value="Decreased">Decreased</option>
+        <option value="Anorexia">Anorexia</option>
+      </select>
+    </div>
+    <div class="field"><label>Vomit</label>
+      <select id="vomit">
+        <option value="-">-</option>
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+      </select>
+    </div>
+    <div class="field"><label>Resp. Signs</label><input type="text" id="respSigns" placeholder="-"></div>
+  </div>
+  <div class="grid-row g3">
+    <div class="field"><label>Water Intake</label>
+      <select id="waterIntake">
+        <option value="-">-</option>
+        <option value="Normal">Normal</option>
+        <option value="Increased">Increased</option>
+        <option value="Decreased">Decreased</option>
+      </select>
+    </div>
+    <div class="field"><label>Stool</label><input type="text" id="stool" placeholder="-"></div>
+    <div class="field"><label>Skin</label>
+      <select id="skin">
+        <option value="-">-</option>
+        <option value="Normal">Normal</option>
+        <option value="Alopecia">Alopecia</option>
+        <option value="Pruritus">Pruritus</option>
+        <option value="Lesion">Lesion</option>
+        <option value="Rash">Rash</option>
+      </select>
+    </div>
+  </div>
+  <div class="grid-row g3">
+    <div class="field"><label>Energy</label>
+      <select id="energy">
+        <option value="-">-</option>
+        <option value="Normal">Normal</option>
+        <option value="Lethargic">Lethargic</option>
+        <option value="Hyperactive">Hyperactive</option>
+      </select>
+    </div>
+    <div class="field"><label>Urination</label><input type="text" id="urination" placeholder="-"></div>
+    <div class="field"><label>Pain Score</label>
+      <select id="painScore">
+        <option value="-">-</option>
+        <option value="0">0</option><option value="1">1</option><option value="2">2</option>
+        <option value="3">3</option><option value="4">4</option><option value="5">5</option>
+        <option value="6">6</option><option value="7">7</option><option value="8">8</option>
+        <option value="9">9</option><option value="10">10</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- LIFESTYLE & PREVENTATIVE -->
+  <div class="section-header">Lifestyle &amp; Preventative</div>
+  <div class="grid-row g4">
+    <div class="field span2"><label>Diet</label><input type="text" id="diet" placeholder="-"></div>
+    <div class="field span2"><label>Vaccination</label><input type="text" id="vaccination" placeholder="-"></div>
+  </div>
+  <div class="grid-row g4">
+    <div class="field span2"><label>Environment</label><input type="text" id="environment" placeholder="-"></div>
+    <div class="field span2"><label>Deworming</label><input type="text" id="deworming" placeholder="-"></div>
+  </div>
+
+  <!-- CHIEF COMPLAINT & HISTORY -->
+  <div class="section-header">Chief Complaint &amp; History</div>
+  <div class="grid-row">
+    <div class="field full"><label>C. Complaint</label><textarea id="chiefComplaint" placeholder="-"></textarea></div>
+  </div>
+  <div class="grid-row g2">
+    <div class="field"><label>Onset &amp; Duration</label><input type="text" id="onsetDuration" placeholder="-"></div>
+    <div class="field"><label>Allergy Hx</label><input type="text" id="allergyHx" placeholder="-"></div>
+  </div>
+  <div class="grid-row g2">
+    <div class="field"><label>Past Medical Hx</label><input type="text" id="pastMedicalHx" placeholder="-"></div>
+    <div class="field"><label>Prev. Treatment</label><input type="text" id="prevTreatment" placeholder="-"></div>
+  </div>
+
+  <!-- PHYSICAL EXAMINATIONS -->
+  <div class="section-header">Physical Examinations</div>
+  <div class="grid-row g3">
+    <div class="field"><label>Temp (°F)</label><input type="text" id="temp" placeholder="-"></div>
+    <div class="field"><label>Pulse Quality</label>
+      <select id="pulseQuality">
+        <option value="-">-</option>
+        <option value="Strong">Strong</option>
+        <option value="Weak">Weak</option>
+        <option value="Bounding">Bounding</option>
+        <option value="Thready">Thready</option>
+      </select>
+    </div>
+    <div class="field"><label>Hydration</label>
+      <select id="hydration">
+        <option value="-">-</option>
+        <option value="Normal">Normal</option>
+        <option value="Mild dehydration">Mild dehydration</option>
+        <option value="Moderate dehydration">Moderate dehydration</option>
+        <option value="Severe dehydration">Severe dehydration</option>
+      </select>
+    </div>
+  </div>
+  <div class="grid-row g3">
+    <div class="field"><label>Heart Rate</label><input type="text" id="heartRate" placeholder="-"></div>
+    <div class="field"><label>Mucous Membrane</label>
+      <select id="mucousMembrane">
+        <option value="-">-</option>
+        <option value="Pink/Moist">Pink/Moist</option>
+        <option value="Pale">Pale</option>
+        <option value="White">White</option>
+        <option value="Yellow">Yellow</option>
+        <option value="Blue/Cyanotic">Blue/Cyanotic</option>
+        <option value="Brick Red">Brick Red</option>
+        <option value="Dry">Dry</option>
+      </select>
+    </div>
+    <div class="field"><label>Lymph Nodes</label>
+      <select id="lymphNodes">
+        <option value="-">-</option>
+        <option value="Normal">Normal</option>
+        <option value="Enlarged">Enlarged</option>
+        <option value="Painful">Painful</option>
+      </select>
+    </div>
+  </div>
+  <div class="grid-row g3">
+    <div class="field"><label>Resp. Rate</label><input type="text" id="respRate" placeholder="-"></div>
+    <div class="field"><label>CRT</label>
+      <select id="crt">
+        <option value="-">-</option>
+        <option value="< 2 sec">&lt; 2 sec</option>
+        <option value="2-3 sec">2-3 sec</option>
+        <option value="> 3 sec">&gt; 3 sec</option>
+      </select>
+    </div>
+    <div class="field"><label>Abnormal Findings</label><input type="text" id="abnormalFindings" placeholder="-"></div>
+  </div>
+
+  <!-- CASE ANALYSIS -->
+  <div class="section-header">Case Analysis</div>
+  <div class="grid-row g3">
+    <div class="field"><label>Problem List</label><textarea id="problemList" placeholder="-"></textarea></div>
+    <div class="field"><label>Differential Dx</label><textarea id="differentialDx" placeholder="-"></textarea></div>
+    <div class="field"><label>Dx Results</label><textarea id="dxResults" placeholder="-"></textarea></div>
+  </div>
+  <div class="grid-row g3">
+    <div class="field"><label>Dx Plan</label><input type="text" id="dxPlan" placeholder="-"></div>
+    <div class="field"><label>Final Diagnosis</label><input type="text" id="finalDiagnosis" placeholder="-"></div>
+    <div class="field"><label>Clinician</label><input type="text" id="clinician" placeholder="-"></div>
+  </div>
+
+</div>
+
+<div class="status-bar" id="statusBar"></div>
+
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://apis.google.com/js/api.js"></script>
+<script>
+const CLIENT_ID = '325457195617-m9b5d3q0j22oo0kk61ugd50epvi4sbjg.apps.googleusercontent.com';
+const DOC_ID    = '17wClJhvTIAN-V1qceE9ZpJiXRcazm_tcT1qB1mxi05c';
+const SCOPES    = 'https://www.googleapis.com/auth/documents';
+
+let tokenClient, isSignedIn = false;
+
+window.onload = () => { gapi.load('client', initGapi); };
+
+function initGapi() {
+  gapi.client.init({
+    discoveryDocs: ['https://docs.googleapis.com/$discovery/rest?version=v1'],
+  }).then(() => {
+    tokenClient = google.accounts.oauth2.initTokenClient({
+      client_id: CLIENT_ID, scope: SCOPES,
+      callback: (resp) => {
+        if (resp.error) { showStatus('Sign in failed: ' + resp.error, 'error'); return; }
+        isSignedIn = true;
+        doSave();
+      },
+    });
+  });
+}
+
+function v(id) {
+  const el = document.getElementById(id);
+  return el ? (el.value.trim() || '-') : '-';
+}
+
+function clearForm() {
+  document.querySelectorAll('#caseForm input, #caseForm textarea').forEach(el => el.value = '');
+  document.querySelectorAll('#caseForm select').forEach(el => el.selectedIndex = 0);
+}
+
+// ===== SAVE =====
+async function saveToGoogleDocs() {
+  if (!isSignedIn) {
+    tokenClient.requestAccessToken({ prompt: 'consent' });
+    return;
+  }
+  doSave();
+}
+
+async function doSave() {
+  showStatus('⏳ Saving to Google Docs...', 'info');
+  const d = getData();
+
+  try {
+    // Get current doc end index
+    const docRes = await gapi.client.docs.documents.get({ documentId: DOC_ID });
+    const body = docRes.result.body;
+    const endIndex = body.content[body.content.length - 1].endIndex - 1;
+
+    // Build table rows
+    const tableData = [
+      ['GENERAL INFORMATION', '', '', '', '', '', '', ''],
+      ['Pet Name', d.petName, 'Sex', d.sex, 'Color', d.color, 'Visit Date', d.visitDate],
+      ['Species', d.species, 'Weight (kg)', d.weight, 'Repro Status', d.reproStatus, 'Breed', d.breed],
+      ['DOB', d.dob, 'Age', d.age, 'BCS', d.bcs, 'Owner', d.owner],
+      ['SYSTEMIC REVIEW', '', '', '', '', '', '', ''],
+      ['Appetite', d.appetite, 'Vomit', d.vomit, 'Resp. Signs', d.respSigns, '', ''],
+      ['Water Intake', d.waterIntake, 'Stool', d.stool, 'Skin', d.skin, '', ''],
+      ['Energy', d.energy, 'Urination', d.urination, 'Pain Score', d.painScore, '', ''],
+      ['LIFESTYLE & PREVENTATIVE', '', '', '', '', '', '', ''],
+      ['Diet', d.diet, 'Vaccination', d.vaccination, '', '', '', ''],
+      ['Environment', d.environment, 'Deworming', d.deworming, '', '', '', ''],
+      ['CHIEF COMPLAINT & HISTORY', '', '', '', '', '', '', ''],
+      ['C. Complaint', d.chiefComplaint, '', '', '', '', '', ''],
+      ['Onset & Duration', d.onsetDuration, 'Allergy Hx', d.allergyHx, '', '', '', ''],
+      ['Past Medical Hx', d.pastMedicalHx, 'Prev. Treatment', d.prevTreatment, '', '', '', ''],
+      ['PHYSICAL EXAMINATIONS', '', '', '', '', '', '', ''],
+      ['Temp (°F)', d.temp, 'Pulse Quality', d.pulseQuality, 'Hydration', d.hydration, '', ''],
+      ['Heart Rate', d.heartRate, 'Mucous Membrane', d.mucousMembrane, 'Lymph Nodes', d.lymphNodes, '', ''],
+      ['Resp. Rate', d.respRate, 'CRT', d.crt, 'Abnormal Findings', d.abnormalFindings, '', ''],
+      ['CASE ANALYSIS', '', '', '', '', '', '', ''],
+      ['Problem List', d.problemList, 'Differential Dx', d.differentialDx, 'Dx Results', d.dxResults, '', ''],
+      ['Dx Plan', d.dxPlan, 'Final Diagnosis', d.finalDiagnosis, 'Clinician', d.clinician, '', ''],
+    ];
+
+    const requests = [];
+
+    // Add separator line before table
+    requests.push({
+      insertText: { location: { index: endIndex }, text: '\n' }
+    });
+
+    // Insert table (21 rows x 8 cols)
+    requests.push({
+      insertTable: {
+        rows: tableData.length,
+        columns: 8,
+        location: { index: endIndex + 1 }
+      }
+    });
+
+    await gapi.client.docs.documents.batchUpdate({
+      documentId: DOC_ID,
+      resource: { requests }
+    });
+
+    // Now fill table cells
+    const doc2 = await gapi.client.docs.documents.get({ documentId: DOC_ID });
+    const tables = doc2.result.body.content.filter(c => c.table);
+    const lastTable = tables[tables.length - 1].table;
+
+    const cellRequests = [];
+    tableData.forEach((row, ri) => {
+      row.forEach((cellText, ci) => {
+        if (!cellText || cellText === '') return;
+        const cell = lastTable.tableRows[ri]?.tableCells[ci];
+        if (!cell) return;
+        const cellIdx = cell.content[0]?.paragraph?.elements[0]?.startIndex;
+        if (!cellIdx) return;
+        cellRequests.push({
+          insertText: { location: { index: cellIdx }, text: cellText }
+        });
+        // Bold for section headers (col 0, even rows that are headers)
+        const isHeader = (ci === 0 && cellText === cellText.toUpperCase() && cellText.length > 5 && ci === 0 && row[1] === '');
+        if (isHeader) {
+          cellRequests.push({
+            updateTextStyle: {
+              range: { startIndex: cellIdx, endIndex: cellIdx + cellText.length },
+              textStyle: { bold: true },
+              fields: 'bold'
+            }
+          });
+        }
+      });
+    });
+
+    if (cellRequests.length > 0) {
+      await gapi.client.docs.documents.batchUpdate({
+        documentId: DOC_ID,
+        resource: { requests: cellRequests }
+      });
+    }
+
+    const docUrl = `https://docs.google.com/document/d/${DOC_ID}/edit`;
+    showStatus(`✅ Saved! <a href="${docUrl}" target="_blank" style="color:#065f46;font-weight:700;">Open Google Doc →</a>`, 'success');
+
+    // Clear form after save
+    setTimeout(() => { clearForm(); }, 1500);
+
+  } catch (err) {
+    console.error(err);
+    showStatus('❌ Error: ' + (err.result?.error?.message || err.message || JSON.stringify(err)), 'error');
+  }
+}
+
+function getData() {
+  return {
+    petName: v('petName'), sex: v('sex'), color: v('color'), visitDate: v('visitDate'),
+    species: v('species'), weight: v('weight'), reproStatus: v('reproStatus'), breed: v('breed'),
+    dob: v('dob'), age: v('age'), bcs: v('bcs'), owner: v('owner'),
+    appetite: v('appetite'), vomit: v('vomit'), respSigns: v('respSigns'),
+    waterIntake: v('waterIntake'), stool: v('stool'), skin: v('skin'),
+    energy: v('energy'), urination: v('urination'), painScore: v('painScore'),
+    diet: v('diet'), vaccination: v('vaccination'),
+    environment: v('environment'), deworming: v('deworming'),
+    chiefComplaint: v('chiefComplaint'), onsetDuration: v('onsetDuration'),
+    allergyHx: v('allergyHx'), pastMedicalHx: v('pastMedicalHx'), prevTreatment: v('prevTreatment'),
+    temp: v('temp'), pulseQuality: v('pulseQuality'), hydration: v('hydration'),
+    heartRate: v('heartRate'), mucousMembrane: v('mucousMembrane'), lymphNodes: v('lymphNodes'),
+    respRate: v('respRate'), crt: v('crt'), abnormalFindings: v('abnormalFindings'),
+    problemList: v('problemList'), differentialDx: v('differentialDx'), dxResults: v('dxResults'),
+    dxPlan: v('dxPlan'), finalDiagnosis: v('finalDiagnosis'), clinician: v('clinician'),
+  };
+}
+
+function showStatus(msg, type) {
+  const bar = document.getElementById('statusBar');
+  bar.innerHTML = msg; bar.className = 'status-bar ' + type;
+  if (type !== 'info') setTimeout(() => { bar.className = 'status-bar'; }, 8000);
+}
+</script>
+</body>
+</html>
