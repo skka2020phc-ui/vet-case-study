@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veterinary Case Study</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f5f5f5;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            background-color: #fafafa;
+        }
+
+        .header h1 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .header-date {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .form-section {
+            padding: 20px;
+        }
+
+        .section-header {
+            background-color: #1e3a5f;
+            color: white;
+            padding: 12px 20px;
+            margin: 20px 0 15px 0;
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 13px;
+            font-family: inherit;
+            background-color: #fff;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #1e3a5f;
+            box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.1);
+        }
+
+        .form-group input[type="text"]::placeholder {
+            color: #999;
+        }
+
+        .form-group select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            background-size: 16px;
+            padding-right: 30px;
+        }
+
+        .treatment-section {
+            margin-top: 20px;
+        }
+
+        .treatment-type {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #1e3a5f;
+            border-radius: 4px;
+        }
+
+        .treatment-type h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .treatment-icon {
+            font-size: 18px;
+        }
+
+        .add-button {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #e8f0f7;
+            color: #1e3a5f;
+            border: 1px dashed #1e3a5f;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s;
+            margin-top: 10px;
+        }
+
+        .add-button:hover {
+            background-color: #d0e0f0;
+        }
+
+        .treatment-entry {
+            background-color: white;
+            padding: 10px;
+            margin-bottom: 8px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+        }
+
+        .treatment-entry .remove-btn {
+            background-color: #ffebee;
+            color: #c62828;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .treatment-entry .remove-btn:hover {
+            background-color: #ffcdd2;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            padding: 20px;
+            border-top: 1px solid #e0e0e0;
+            background-color: #fafafa;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background-color: #1e3a5f;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #152a45;
+        }
+
+        .btn-secondary {
+            background-color: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background-color: #d0d0d0;
+        }
+
+        .btn-success {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #45a049;
+        }
+
+        .btn-export {
+            background-color: #2196f3;
+            color: white;
+        }
+
+        .btn-export:hover {
+            background-color: #0b7dda;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+        }
+
+        .modal-header {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .modal-body {
+            margin-bottom: 20px;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .close-modal {
+            background-color: #e0e0e0;
+            color: #333;
+        }
+
+        .close-modal:hover {
+            background-color: #d0d0d0;
+        }
+
+        .success-message {
+            background-color: #c8e6c9;
+            color: #2e7d32;
+            padding: 12px 16px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Veterinary Case Study</h1>
+            <div class="header-date" id="currentDate"></div>
+        </div>
+
+        <div class="form-section">
+            <div class="success-message" id="successMessage">Case study saved successfully!</div>
+
+            <!-- General Information -->
+            <div class="section-header">GENERAL INFORMATION</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Pet Name</label>
+                    <input type="text" id="petName" placeholder="Enter name">
+                </div>
+                <div class="form-group">
+                    <label>Sex</label>
+                    <select id="sex">
+                        <option value="">-</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Color</label>
+                    <input type="text" id="color" placeholder="Enter color">
+                </div>
+                <div class="form-group">
+                    <label>Visit Date</label>
+                    <input type="date" id="visitDate">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Species</label>
+                    <select id="species">
+                        <option value="">-</option>
+                        <option value="Dog">Dog</option>
+                        <option value="Cat">Cat</option>
+                        <option value="Bird">Bird</option>
+                        <option value="Rabbit">Rabbit</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Weight (kg)</label>
+                    <input type="number" id="weight" placeholder="Enter weight">
+                </div>
+                <div class="form-group">
+                    <label>Repro Status</label>
+                    <select id="reproStatus">
+                        <option value="">-</option>
+                        <option value="Intact">Intact</option>
+                        <option value="Neutered">Neutered</option>
+                        <option value="Spayed">Spayed</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Breed</label>
+                    <input type="text" id="breed" placeholder="Enter breed">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>DOB</label>
+                    <input type="date" id="dob">
+                </div>
+                <div class="form-group">
+                    <label>Age</label>
+                    <input type="text" id="age" placeholder="Enter age">
+                </div>
+                <div class="form-group">
+                    <label>BCS</label>
+                    <select id="bcs">
+                        <option value="">-</option>
+                        <option value="1">1 - Underweight</option>
+                        <option value="2">2 - Lean</option>
+                        <option value="3">3 - Ideal</option>
+                        <option value="4">4 - Overweight</option>
+                        <option value="5">5 - Obese</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Owner</label>
+                    <input type="text" id="owner" placeholder="Enter owner name">
+                </div>
+            </div>
+
+            <!-- Systemic Review -->
+            <div class="section-header">SYSTEMIC REVIEW</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Appetite</label>
+                    <select id="appetite">
+                        <option value="">-</option>
+                        <option value="Normal">Normal</option>
+                        <option value="Decreased">Decreased</option>
+                        <option value="Increased">Increased</option>
+                        <option value="Absent">Absent</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Vomit</label>
+                    <select id="vomit">
+                        <option value="">-</option>
+                        <option value="None">None</option>
+                        <option value="Occasional">Occasional</option>
+                        <option value="Frequent">Frequent</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Resp. Signs</label>
+                    <select id="respSigns">
+                        <option value="">-</option>
+                        <option value="Normal">Normal</option>
+                        <option value="Abnormal">Abnormal</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Water Intake</label>
+                    <select id="waterIntake">
+                        <option value="">-</option>
+                        <option value="Normal">Normal</option>
+                        <option value="Increased">Increased</option>
+                        <option value="Decreased">Decreased</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Stool</label>
+                    <select id="stool">
+                        <option value="">-</option>
+                        <option value="Normal">Normal</option>
+                        <option value="Diarrhea">Diarrhea</option>
+                        <option value="Constipation">Constipation</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Skin</label>
+                    <select id="skin">
+                        <option value="">-</option>
+                        <option value="Normal">Normal</option>
+                        <option value="Abnormal">Abnormal</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Energy</label>
+                    <select id="energy">
+                        <option value="">-</option>
+                        <option value="Normal">Normal</option>
+                        <option value="Lethargic">Lethargic</option>
+                        <option value="Hyperactive">Hyperactive</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Urination</label>
+                    <select id="urination">
+                        <option value="">-</option>
+                        <option value="Normal">Normal</option>
+                        <option value="Polyuria">Polyuria</option>
+                        <option value="Oliguria">Oliguria</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Pain Score</label>
+                    <select id="painScore">
+                        <option value="">-</option>
+                        <option value="0">0 - No pain</option>
+                        <option value="1-3">1-3 - Mild</option>
+                        <option value="4-6">4-6 - Moderate</option>
+                        <option value="7-10">7-10 - Severe</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Lifestyle & Preventative -->
+            <div class="section-header">LIFESTYLE & PREVENTATIVE</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Diet</label>
+                    <select id="diet">
+                        <option value="">-</option>
+                        <option value="Commercial">Commercial</option>
+                        <option value="Home-made">Home-made</option>
+                        <option value="Raw">Raw</option>
+                        <option value="Mixed">Mixed</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Vaccination</label>
+                    <select id="vaccination">
+                        <option value="">-</option>
+                        <option value="Current">Current</option>
+                        <option value="Overdue">Overdue</option>
+                        <option value="Not done">Not done</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Environment</label>
+                    <select id="environment">
+                        <option value="">-</option>
+                        <option value="Indoor">Indoor</option>
+                        <option value="Outdoor">Outdoor</option>
+                        <option value="Mixed">Mixed</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Deworming</label>
+                    <select id="deworming">
+                        <option value="">-</option>
+                        <option value="Current">Current</option>
+                        <option value="Overdue">Overdue</option>
+                        <option value="Not done">Not done</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Chief Complaint & History -->
+            <div class="section-header">CHIEF COMPLAINT & HISTORY</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>C. Complaint</label>
+                    <textarea id="complaint" placeholder="Enter chief complaint" rows="2"></textarea>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Onset & Duration</label>
+                    <input type="text" id="onsetDuration" placeholder="e.g., 3 days">
+                </div>
+                <div class="form-group">
+                    <label>Allergy Hx</label>
+                    <input type="text" id="allergyHx" placeholder="Enter allergy history">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Past Medical Hx</label>
+                    <textarea id="pastMedicalHx" placeholder="Enter past medical history" rows="2"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Prev. Treatment</label>
+                    <textarea id="prevTreatment" placeholder="Enter previous treatment" rows="2"></textarea>
+                </div>
+            </div>
+
+            <!-- Physical Examinations -->
+            <div class="section-header">PHYSICAL EXAMINATIONS</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Temp (°F)</label>
+                    <input type="number" id="temp" placeholder="Enter temperature" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label>Temp Range</label>
+                    <select id="tempRange">
+                        <option value="">-</option>
+                        <option value="Normal">Normal (98-102.5)</option>
+                        <option value="Elevated">Elevated</option>
+                        <option value="Low">Low</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Pulse Quality</label>
+                    <select id="pulseQuality">
+                        <option value="">-</option>
+                        <option value="Normal">Normal</option>
+                        <option value="Weak">Weak</option>
+                        <option value="Bounding">Bounding</option>
+                        <option value="Irregular">Irregular</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Hydration</label>
+                    <select id="hydration">
+                        <option value="">-</option>
+                        <option value="Normal">Normal</option>
+                        <option value="Dehydrated">Dehydrated</option>
+                        <option value="Over-hydrated">Over-hydrated</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Heart Rate</label>
+                    <input type="number" id="heartRate" placeholder="Enter heart rate (bpm)">
+                </div>
+                <div class="form-group">
+                    <label>Mucous Membrane</label>
+                    <select id="mucousMembrane">
+                        <option value="">-</option>
+                        <option value="Pink">Pink</option>
+                        <option value="Pale">Pale</option>
+                        <option value="Icteric">Icteric</option>
+                        <option value="Cyanotic">Cyanotic</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Lymph Nodes</label>
+                    <select id="lymphNodes">
+                        <option value="">-</option>
+                        <option value="Normal">Normal</option>
+                        <option value="Enlarged">Enlarged</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Resp. Rate</label>
+                    <input type="number" id="respRate" placeholder="Enter respiratory rate (breaths/min)">
+                </div>
+                <div class="form-group">
+                    <label>CRT</label>
+                    <select id="crt">
+                        <option value="">-</option>
+                        <option value="Normal">Normal (&lt;2 sec)</option>
+                        <option value="Prolonged">Prolonged (&gt;2 sec)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Abnormal Findings</label>
+                    <textarea id="abnormalFindings" placeholder="Enter any abnormal findings" rows="2"></textarea>
+                </div>
+            </div>
+
+            <!-- Case Analysis -->
+            <div class="section-header">CASE ANALYSIS</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Problem List</label>
+                    <textarea id="problemList" placeholder="Enter problem list" rows="2"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Differential Dx</label>
+                    <textarea id="differentialDx" placeholder="Enter differential diagnoses" rows="2"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Dx Results</label>
+                    <textarea id="dxResults" placeholder="Enter diagnostic results" rows="2"></textarea>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Dx Plan</label>
+                    <select id="dxPlan">
+                        <option value="">-</option>
+                        <option value="CBC">CBC</option>
+                        <option value="Ultrasound">Ultrasound</option>
+                        <option value="X-Ray">X-Ray</option>
+                        <option value="Blood Culture">Blood Culture</option>
+                        <option value="Urinalysis">Urinalysis</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Final Diagnosis</label>
+                    <input type="text" id="finalDiagnosis" placeholder="Enter final diagnosis">
+                </div>
+            </div>
+
+            <!-- Treatment Plan -->
+            <div class="section-header">TREATMENT PLAN</div>
+            <div class="treatment-section">
+                <div class="treatment-type">
+                    <h3><span class="treatment-icon">💉</span> Injection Treatment</h3>
+                    <div id="injectionList"></div>
+                    <button class="add-button" onclick="addInjection()">+ Add Injection</button>
+                </div>
+
+                <div class="treatment-type">
+                    <h3><span class="treatment-icon">💊</span> Oral Treatment</h3>
+                    <div id="oralList"></div>
+                    <button class="add-button" onclick="addOral()">+ Add Oral</button>
+                </div>
+
+                <div class="treatment-type">
+                    <h3><span class="treatment-icon">🧴</span> Topical Treatment</h3>
+                    <div id="topicalList"></div>
+                    <button class="add-button" onclick="addTopical()">+ Add Topical</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn btn-secondary" onclick="resetForm()">Clear</button>
+            <button class="btn btn-primary" onclick="saveToLocalStorage()">Save Case</button>
+            <button class="btn btn-export" onclick="exportToJSON()">Export JSON</button>
+            <button class="btn btn-success" onclick="exportToCSV()">Export CSV</button>
+        </div>
+    </div>
+
+    <!-- Injection Modal -->
+    <div id="injectionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">Add Injection Treatment</div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Drug Name</label>
+                    <input type="text" id="injectionDrug" placeholder="e.g., Metoclopramide">
+                </div>
+                <div class="form-group">
+                    <label>Dose (ml)</label>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <select id="injectionDose">
+                            <option value="">Select or enter custom</option>
+                            <option value="0.1">0.1</option>
+                            <option value="0.25">0.25</option>
+                            <option value="0.5">0.5</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                        </select>
+                        <input type="number" id="injectionDoseCustom" placeholder="Custom ml" step="0.1">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn close-modal" onclick="closeInjectionModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveInjection()">Add</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Oral Modal -->
+    <div id="oralModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">Add Oral Treatment</div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Drug Name</label>
+                    <input type="text" id="oralDrug" placeholder="e.g., Amoxicillin">
+                </div>
+                <div class="form-group">
+                    <label>Dose</label>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <input type="number" id="oralDoseAmount" placeholder="Amount" step="0.1">
+                        <select id="oralDoseUnit">
+                            <option value="mg">mg</option>
+                            <option value="ml">ml</option>
+                            <option value="tab">tab</option>
+                            <option value="pack">pack</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Frequency</label>
+                    <select id="oralFrequency">
+                        <option value="">Select frequency</option>
+                        <option value="OD">OD (Once daily)</option>
+                        <option value="BID">BID (Twice daily)</option>
+                        <option value="TID">TID (Three times daily)</option>
+                        <option value="QID">QID (Four times daily)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Duration</label>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <input type="number" id="oralDuration" placeholder="Number" min="1" max="10">
+                        <select id="oralDurationUnit">
+                            <option value="days">Days</option>
+                            <option value="weeks">Weeks</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn close-modal" onclick="closeOralModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveOral()">Add</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Topical Modal -->
+    <div id="topicalModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">Add Topical Treatment</div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Drug Name</label>
+                    <input type="text" id="topicalDrug" placeholder="e.g., Antibiotic ointment">
+                </div>
+                <div class="form-group">
+                    <label>Frequency</label>
+                    <select id="topicalFrequency">
+                        <option value="">Select frequency</option>
+                        <option value="OD">OD (Once daily)</option>
+                        <option value="BID">BID (Twice daily)</option>
+                        <option value="TID">TID (Three times daily)</option>
+                        <option value="QID">QID (Four times daily)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Duration</label>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <input type="number" id="topicalDuration" placeholder="Number" min="1" max="10">
+                        <select id="topicalDurationUnit">
+                            <option value="days">Days</option>
+                            <option value="weeks">Weeks</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn close-modal" onclick="closeTopicalModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveTopical()">Add</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            setCurrentDate();
+            loadFromLocalStorage();
+        });
+
+        // Set current date
+        function setCurrentDate() {
+            const today = new Date();
+            document.getElementById('currentDate').textContent = today.toLocaleDateString('en-US', {
+                weekday: 'short',
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+            document.getElementById('visitDate').valueAsDate = today;
+        }
+
+        // Treatment arrays
+        let injections = [];
+        let orals = [];
+        let topicals = [];
+
+        // Add Injection
+        function addInjection() {
+            document.getElementById('injectionModal').classList.add('active');
+        }
+
+        function closeInjectionModal() {
+            document.getElementById('injectionModal').classList.remove('active');
+            document.getElementById('injectionDrug').value = '';
+            document.getElementById('injectionDose').value = '';
+            document.getElementById('injectionDoseCustom').value = '';
+        }
+
+        function saveInjection() {
+            const drug = document.getElementById('injectionDrug').value;
+            const dose = document.getElementById('injectionDoseCustom').value || document.getElementById('injectionDose').value;
+            
+            if (!drug || !dose) {
+                alert('Please enter drug name and dose');
+                return;
+            }
+
+            injections.push({ drug, dose });
+            renderInjections();
+            closeInjectionModal();
+        }
+
+        function renderInjections() {
+            const list = document.getElementById('injectionList');
+            list.innerHTML = injections.map((inj, idx) => `
+                <div class="treatment-entry">
+                    <span>${inj.drug} ${inj.dose} ml</span>
+                    <button class="remove-btn" onclick="removeInjection(${idx})">Remove</button>
+                </div>
+            `).join('');
+        }
+
+        function removeInjection(idx) {
+            injections.splice(idx, 1);
+            renderInjections();
+        }
+
+        // Add Oral
+        function addOral() {
+            document.getElementById('oralModal').classList.add('active');
+        }
+
+        function closeOralModal() {
+            document.getElementById('oralModal').classList.remove('active');
+            document.getElementById('oralDrug').value = '';
+            document.getElementById('oralDoseAmount').value = '';
+            document.getElementById('oralFrequency').value = '';
+            document.getElementById('oralDuration').value = '';
+        }
+
+        function saveOral() {
+            const drug = document.getElementById('oralDrug').value;
+            const dose = document.getElementById('oralDoseAmount').value;
+            const unit = document.getElementById('oralDoseUnit').value;
+            const frequency = document.getElementById('oralFrequency').value;
+            const duration = document.getElementById('oralDuration').value;
+            const durationUnit = document.getElementById('oralDurationUnit').value;
+
+            if (!drug || !dose || !frequency || !duration) {
+                alert('Please fill all fields');
+                return;
+            }
+
+            orals.push({ drug, dose, unit, frequency, duration, durationUnit });
+            renderOrals();
+            closeOralModal();
+        }
+
+        function renderOrals() {
+            const list = document.getElementById('oralList');
+            list.innerHTML = orals.map((oral, idx) => `
+                <div class="treatment-entry">
+                    <span>${oral.drug} ${oral.dose}${oral.unit}, ${oral.frequency}, ${oral.duration} ${oral.durationUnit}</span>
+                    <button class="remove-btn" onclick="removeOral(${idx})">Remove</button>
+                </div>
+            `).join('');
+        }
+
+        function removeOral(idx) {
+            orals.splice(idx, 1);
+            renderOrals();
+        }
+
+        // Add Topical
+        function addTopical() {
+            document.getElementById('topicalModal').classList.add('active');
+        }
+
+        function closeTopicalModal() {
+            document.getElementById('topicalModal').classList.remove('active');
+            document.getElementById('topicalDrug').value = '';
+            document.getElementById('topicalFrequency').value = '';
+            document.getElementById('topicalDuration').value = '';
+        }
+
+        function saveTopical() {
+            const drug = document.getElementById('topicalDrug').value;
+            const frequency = document.getElementById('topicalFrequency').value;
+            const duration = document.getElementById('topicalDuration').value;
+            const durationUnit = document.getElementById('topicalDurationUnit').value;
+
+            if (!drug || !frequency || !duration) {
+                alert('Please fill all fields');
+                return;
+            }
+
+            topicals.push({ drug, frequency, duration, durationUnit });
+            renderTopicals();
+            closeTopicalModal();
+        }
+
+        function renderTopicals() {
+            const list = document.getElementById('topicalList');
+            list.innerHTML = topicals.map((top, idx) => `
+                <div class="treatment-entry">
+                    <span>${top.drug}, ${top.frequency}, ${top.duration} ${top.durationUnit}</span>
+                    <button class="remove-btn" onclick="removeTopical(${idx})">Remove</button>
+                </div>
+            `).join('');
+        }
+
+        function removeTopical(idx) {
+            topicals.splice(idx, 1);
+            renderTopicals();
+        }
+
+        // Get all form data
+        function getFormData() {
+            return {
+                generalInfo: {
+                    petName: document.getElementById('petName').value,
+                    sex: document.getElementById('sex').value,
+                    color: document.getElementById('color').value,
+                    visitDate: document.getElementById('visitDate').value,
+                    species: document.getElementById('species').value,
+                    weight: document.getElementById('weight').value,
+                    reproStatus: document.getElementById('reproStatus').value,
+                    breed: document.getElementById('breed').value,
+                    dob: document.getElementById('dob').value,
+                    age: document.getElementById('age').value,
+                    bcs: document.getElementById('bcs').value,
+                    owner: document.getElementById('owner').value
+                },
+                systemicReview: {
+                    appetite: document.getElementById('appetite').value,
+                    vomit: document.getElementById('vomit').value,
+                    respSigns: document.getElementById('respSigns').value,
+                    waterIntake: document.getElementById('waterIntake').value,
+                    stool: document.getElementById('stool').value,
+                    skin: document.getElementById('skin').value,
+                    energy: document.getElementById('energy').value,
+                    urination: document.getElementById('urination').value,
+                    painScore: document.getElementById('painScore').value
+                },
+                lifestylePreventative: {
+                    diet: document.getElementById('diet').value,
+                    vaccination: document.getElementById('vaccination').value,
+                    environment: document.getElementById('environment').value,
+                    deworming: document.getElementById('deworming').value
+                },
+                chiefComplaint: {
+                    complaint: document.getElementById('complaint').value,
+                    onsetDuration: document.getElementById('onsetDuration').value,
+                    allergyHx: document.getElementById('allergyHx').value,
+                    pastMedicalHx: document.getElementById('pastMedicalHx').value,
+                    prevTreatment: document.getElementById('prevTreatment').value
+                },
+                physicalExams: {
+                    temp: document.getElementById('temp').value,
+                    tempRange: document.getElementById('tempRange').value,
+                    pulseQuality: document.getElementById('pulseQuality').value,
+                    hydration: document.getElementById('hydration').value,
+                    heartRate: document.getElementById('heartRate').value,
+                    mucousMembrane: document.getElementById('mucousMembrane').value,
+                    lymphNodes: document.getElementById('lymphNodes').value,
+                    respRate: document.getElementById('respRate').value,
+                    crt: document.getElementById('crt').value,
+                    abnormalFindings: document.getElementById('abnormalFindings').value
+                },
+                caseAnalysis: {
+                    problemList: document.getElementById('problemList').value,
+                    differentialDx: document.getElementById('differentialDx').value,
+                    dxResults: document.getElementById('dxResults').value,
+                    dxPlan: document.getElementById('dxPlan').value,
+                    finalDiagnosis: document.getElementById('finalDiagnosis').value
+                },
+                treatmentPlan: {
+                    injections,
+                    orals,
+                    topicals
+                }
+            };
+        }
+
+        // Save to Local Storage
+        function saveToLocalStorage() {
+            const data = getFormData();
+            const cases = JSON.parse(localStorage.getItem('vetCases') || '[]');
+            cases.push({
+                id: Date.now(),
+                timestamp: new Date().toISOString(),
+                ...data
+            });
+            localStorage.setItem('vetCases', JSON.stringify(cases));
+            
+            const msg = document.getElementById('successMessage');
+            msg.classList.add('show');
+            setTimeout(() => msg.classList.remove('show'), 3000);
+        }
+
+        // Export to JSON
+        function exportToJSON() {
+            const data = getFormData();
+            const json = JSON.stringify(data, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `case_${new Date().getTime()}.json`;
+            a.click();
+        }
+
+        // Export to CSV
+        function exportToCSV() {
+            const data = getFormData();
+            let csv = 'Veterinary Case Study Export\n\n';
+            
+            csv += 'GENERAL INFORMATION\n';
+            csv += `Pet Name,${data.generalInfo.petName}\n`;
+            csv += `Species,${data.generalInfo.species}\n`;
+            csv += `Sex,${data.generalInfo.sex}\n`;
+            csv += `Owner,${data.generalInfo.owner}\n\n`;
+            
+            csv += 'TREATMENT PLAN\n';
+            csv += 'Injections:\n';
+            data.treatmentPlan.injections.forEach(inj => {
+                csv += `${inj.drug},${inj.dose}ml\n`;
+            });
+            
+            csv += 'Oral Medications:\n';
+            data.treatmentPlan.orals.forEach(oral => {
+                csv += `${oral.drug},${oral.dose}${oral.unit},${oral.frequency},${oral.duration}${oral.durationUnit}\n`;
+            });
+            
+            csv += 'Topical Treatments:\n';
+            data.treatmentPlan.topicals.forEach(top => {
+                csv += `${top.drug},${top.frequency},${top.duration}${top.durationUnit}\n`;
+            });
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `case_${new Date().getTime()}.csv`;
+            a.click();
+        }
+
+        // Load from Local Storage
+        function loadFromLocalStorage() {
+            const cases = JSON.parse(localStorage.getItem('vetCases') || '[]');
+            if (cases.length > 0) {
+                const lastCase = cases[cases.length - 1];
+                // Populate form with last case data if needed
+            }
+        }
+
+        // Reset Form
+        function resetForm() {
+            if (confirm('Are you sure you want to clear all data?')) {
+                document.querySelector('form')?.reset();
+                injections = [];
+                orals = [];
+                topicals = [];
+                renderInjections();
+                renderOrals();
+                renderTopicals();
+                setCurrentDate();
+            }
+        }
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            const injectionModal = document.getElementById('injectionModal');
+            const oralModal = document.getElementById('oralModal');
+            const topicalModal = document.getElementById('topicalModal');
+            
+            if (event.target === injectionModal) injectionModal.classList.remove('active');
+            if (event.target === oralModal) oralModal.classList.remove('active');
+            if (event.target === topicalModal) topicalModal.classList.remove('active');
+        }
+    </script>
+</body>
+</html>
